@@ -21,60 +21,60 @@ namespace HW21
         //он идет дальше. Садовники должны работать параллельно.
         //Создать многопоточное приложение,
         //моделирующее работу садовников.
-        
-            const int m = 4;
-            const int l = 5;
-            static int[,] path = new int [m,l] { { 3, 2, 6, 5, 2 }, { 0, 1, 2, 6, 10 }, { 0, 2, 10, 5, 5 }, { 0, 1, 2, 6, 10 } };
-            static void Main(string[] args)
-            {
-                ThreadStart threadStart = new ThreadStart(Gardner1);
-                Thread thread = new Thread(threadStart);
-                thread.Start();
 
-                Gardner2();
-                for (int i = 0; i < m; i++)
+        const int m = 4;
+        const int l = 5;
+        static int[,] path = { { 3, 2, 6, 5, 2 }, { 0, 1, 2, 6, 10 }, { 0, 2, 10, 5, 5 }, { 0, 1, 2, 6, 10 } };
+        static void Main(string[] args)
+        {
+            ThreadStart threadStart = new ThreadStart(Gardner1);
+            Thread thread = new Thread(threadStart);
+            thread.Start();
+
+            Gardner2();
+
+            for (int i = 0; i < m; i++)
+            {
+                for (int k = 0; k < l; k++)
                 {
-                    for (int ii = 0; ii < l; ii++)
-                    {
-                        Console.Write($"{path[i, ii]} ");
-                    }
+                    Console.Write($"{path[i, k]} ");
+                }
                 Console.Write("\n");
             }
-                Console.ReadKey();
-            }
+            Console.ReadKey();
+        }
 
-            static void Gardner1()
+        static void Gardner1()
+        {
+            for (int i = 0; i < m; i++)
             {
-                for (int i = 0; i < m; i++)
+                for (int k = 0; k < l; k++)
                 {
-                    for (int ii = 0; ii < l; ii++)
+                    if (path[i, k] >= 0)
                     {
-                        if (path[i, ii] >= 0)
-                        {
-                            int delay = path[i,ii];
-                            path[i, ii] = -1;
-                            Thread.Sleep(delay);
-                        }
+                        int delay = path[i, k];
+                        path[i, k] = -1; // обработал первый садовник
+                        Thread.Sleep(delay);
                     }
                 }
             }
+        }
 
 
-            static void Gardner2()
+        static void Gardner2()
+        {
+            for (int k = l - 1; k >= 0; k--)
             {
-                for (int i = 0; i < m; i++)
+                for (int i = m - 1; i >= 0; i--)
                 {
-                    for (int ii = 0; ii < l; ii++)
+                    if (path[i, k] >= 0)
                     {
-                        if (path[i, ii] >= 0)
-                        {
-                            int delay = path[i, ii];
-                            path[i, ii] = -2;
-                            Thread.Sleep(delay);
-                        }
+                        int delay = path[i, k];
+                        path[i, k] = -2; // обработал второй садовник
+                        Thread.Sleep(delay);
                     }
                 }
             }
         }
     }
-
+}
