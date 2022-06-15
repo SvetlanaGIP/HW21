@@ -61,6 +61,7 @@ namespace HW21
         }
 
 
+
         static void Gardner2()
         {
             for (int k = l - 1; k >= 0; k--)
